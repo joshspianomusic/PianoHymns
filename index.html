@@ -1,103 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Take My Life and Let It Be</title>
-    <style>
-        body {
-            height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #FFDAB9, #FFB347); /* warm colors */
-            background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
-            text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <title>Take My Life and Let It Be</title>
 
-        @keyframes gradientAnimation {
-            0% {background-position: 0% 50%;}
-            50% {background-position: 100% 50%;}
-            100% {background-position: 0% 50%;}
-        }
+  <style>
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-        h1 {
-            margin-bottom: 40px;
-            font-size: 2em;
-            color: #5a2a27;
-        }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(
+        -45deg,
+        #1e3c72,
+        #2a5298,
+        #3a7bd5,
+        #1e3c72
+      );
+      background-size: 400% 400%;
+      animation: slowBlue 60s ease infinite;
+      color: #ffffff;
+    }
 
-        .audio-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
+    @keyframes slowBlue {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 8px;
-            background-color: #FF8C65;
-            color: white;
-            transition: background-color 0.3s;
-        }
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 40px 50px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      width: 340px;
+    }
 
-        button:hover {
-            background-color: #FF7043;
-        }
+    h1 {
+      font-weight: 500;
+      margin-bottom: 25px;
+      font-size: 1.4rem;
+      letter-spacing: 0.03em;
+    }
 
-        input[type="range"] {
-            width: 300px;
-        }
-    </style>
+    button {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      padding: 10px 24px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    .controls {
+      margin-top: 20px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
+  <div class="container">
     <h1>Take My Life and Let It Be</h1>
-    <div class="audio-controls">
-        <button id="playPause">Play</button>
-        <input type="range" id="slider" min="0" max="100" value="0">
-    </div>
 
     <audio id="audio" src="audio.mp3"></audio>
 
-    <script>
-        const audio = document.getElementById('audio');
-        const playPauseBtn = document.getElementById('playPause');
-        const slider = document.getElementById('slider');
+    <div class="controls">
+      <button id="playPause">Play</button>
+      <input type="range" id="seekBar" value="0" min="0" max="100">
+    </div>
+  </div>
 
-        // Play/pause functionality
-        playPauseBtn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-                playPauseBtn.textContent = 'Pause';
-            } else {
-                audio.pause();
-                playPauseBtn.textContent = 'Play';
-            }
-        });
+  <script>
+    const audio = document.getElementById("audio");
+    const playPause = document.getElementById("playPause");
+    const seekBar = document.getElementById("seekBar");
 
-        // Update slider as audio plays
-        audio.addEventListener('timeupdate', () => {
-            slider.value = (audio.currentTime / audio.duration) * 100;
-        });
+    playPause.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        playPause.textContent = "Pause";
+      } else {
+        audio.pause();
+        playPause.textContent = "Play";
+      }
+    });
 
-        // Seek audio when slider is moved
-        slider.addEventListener('input', () => {
-            audio.currentTime = (slider.value / 100) * audio.duration;
-        });
+    audio.addEventListener("timeupdate", () => {
+      const progress = (audio.currentTime / audio.duration) * 100;
+      seekBar.value = progress || 0;
+    });
 
-        // Reset button text when audio ends
-        audio.addEventListener('ended', () => {
-            playPauseBtn.textContent = 'Play';
-            slider.value = 0;
-        });
-    </script>
+    seekBar.addEventListener("input", () => {
+      const seekTime = (seekBar.value / 100) * audio.duration;
+      audio.currentTime = seekTime;
+    });
+  </script>
 </body>
 </html>
